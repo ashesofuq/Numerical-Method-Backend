@@ -1,7 +1,5 @@
 {
-  "login": {
-    "key": "0917320212"
-  },
+  "login": { },
   "user": {
     "username": "admin",
     "password": "123456",

@@ -22,31 +22,41 @@ const apikeyMiddleware = (req, res, next) => {
 server.use(jsonServer.defaults());
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 server.use(apikeyMiddleware);
+server.get('/Bisection', (req, res) => {
+  const apiKey = req.get('api_key');  
+  if (!apiKey || apiKey !== myKey) {
+    return res.status(401).json({ message: 'API Key Invalid' });
+  }
+  const bisection = router.db.get('Bisection').value();  
+  res.send(bisection)
+  
+})
 server.use(router);
 
+
 // Json Server
-// server2.use(function (req, res, next) {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "X-Requested-With,content-type"
-//   );
-//   next();
-// });
+server2.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type"
+  );
+  next();
+});
 
 server2.use(jsonServer.defaults());
-server2.use(jsonServer.bodyParser)
+server2.use(jsonServer.bodyParser);
 const user = router.db.get('user').value();
 const username = user.username;
 const password = user.password;
 server2.post('/login', (req, res) => {
   let usernameInput = req.body.username;
   let passwordInput = req.body.password;  
-  if (usernameInput == username && passwordInput == password) {
-    res.send({ key: myKey });
-  } else{
-    res.send({ error: 'Invalid username or password'});
+  if (username == usernameInput && password == passwordInput) {
+    res.send({key : myKey});
+  }  else {
+    res.send({error : 'invalid username & password'})
   }
   
 });
